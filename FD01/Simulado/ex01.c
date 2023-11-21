@@ -38,27 +38,38 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <float.h>
 
-void preencheDados(char nomes[5][21], int servidores[5][3]);
+void preencheDados(char nomes[5][64], int servidores[5][3]);
 void calculaServidores(int servidores[5][3]);
-void exibeTabela(char nomes[5][21], int servidores[5][3]);
-void buscaCidade(char nomes[5][21], int servidores[5][3]);
+void exibeTabela(char nomes[5][64], int servidores[5][3]);
+void buscaCidade(char nomes[5][64], int servidores[5][3]);
+void calculaPercentualInativo(char nomes[5][64], int servidores[5][3], float percentualInativo[5]);
+void calculaPercentualAtivo(int servidores[5][3], float percentualAtivo[5]);
+void exibePercentuais(char nomes[5][64], float percentualInativo[5], float percentualAtivo[5]);
+void alteraDefeated(char nomes[5][64], float percentualInativo[5], float percentualAtivo[5]);
 
 int main() {
 
-    char nomes[5][21];
+    char nomes[5][64];
     int servidores[5][3];
+    float percentualInativo[5];
+    float percentualAtivo[5];
 
     preencheDados(nomes, servidores);
     calculaServidores(servidores);
     exibeTabela(nomes, servidores);
     buscaCidade(nomes, servidores);
+    calculaPercentualInativo(nomes, servidores, percentualInativo);
+    calculaPercentualAtivo(servidores, percentualAtivo);
+    exibePercentuais(nomes, percentualInativo, percentualAtivo);
+    alteraDefeated(nomes, percentualInativo, percentualAtivo);
 
     return 0;
 
 }
 
-void preencheDados(char nomes[5][21], int servidores[5][3]) {
+void preencheDados(char nomes[5][64], int servidores[5][3]) {
 
     for (int i = 0; i < 5; i++) {
 
@@ -97,10 +108,10 @@ void calculaServidores(int servidores[5][3]) {
 
 }
 
-void exibeTabela(char nomes[5][21], int servidores[5][3]) {
+void exibeTabela(char nomes[5][64], int servidores[5][3]) {
 
     for (int i = 0; i < 5; i++) {
-        printf("%-20s  |\t", nomes[i]);
+        printf("%-30s  |\t", nomes[i]);
         printf("Ativos: %3d  |\t", servidores[i][0]);
         printf("Inativos: %3d  |\t", servidores[i][1]);
         printf("Total de servidores: %3d \n", servidores[i][2]);
@@ -108,7 +119,7 @@ void exibeTabela(char nomes[5][21], int servidores[5][3]) {
 
 }
 
-void buscaCidade(char nomes[5][21], int servidores[5][3]) {
+void buscaCidade(char nomes[5][64], int servidores[5][3]) {
 
     char nome[21];
     int encontrado = 0;
@@ -134,3 +145,57 @@ void buscaCidade(char nomes[5][21], int servidores[5][3]) {
     }
 
 }
+
+void calculaPercentualInativo(char nomes[5][64], int servidores[5][3], float percentualInativo[5]) {
+
+    int indiceMaior = 0;
+    float maior = FLT_MIN;
+    
+    for (int i = 0; i < 5; i++) {
+
+        percentualInativo[i] = (float) servidores[i][1] / servidores[i][2];
+
+        if (percentualInativo[i] > maior) {
+            maior = percentualInativo[i];
+            indiceMaior = i;
+        }
+
+    }
+
+    printf("%s é a cidade com mais servidores inativos, com %.2f %% dos servidores inativos\n", nomes[indiceMaior], maior * 100);
+
+}
+
+void calculaPercentualAtivo(int servidores[5][3], float percentualAtivo[5]) {
+
+    for (int i = 0; i < 5; i++) {
+        percentualAtivo[i] = (float) servidores[i][0] / servidores[i][2];
+    }
+
+}
+
+void exibePercentuais(char nomes[5][64], float percentualInativo[5], float percentualAtivo[5]) {
+
+    for (int i = 0; i < 5; i++) {
+        printf("Cidade: %-20s\n", nomes[i]);
+        printf("Percentual de servidores inativos: %.2f %%\n", percentualInativo[i] * 100);
+        printf("Percentual de servidores ativos: %.2f %%\n", percentualAtivo[i] * 100);
+        printf("=========================================\n");
+    }
+
+}
+
+void alteraDefeated(char nomes[5][64], float percentualInativo[5], float percentualAtivo[5]) {
+
+    for (int i = 0; i < 5; i++) {
+
+        printf("%-20s -> ", nomes[i]);
+
+        if (percentualInativo[i] > percentualAtivo[i]) {
+            strcat(nomes[i], " - Defeated");
+        }
+
+        printf(" \n", nomes[i]);
+    }
+
+} 
