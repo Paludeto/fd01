@@ -195,7 +195,7 @@ void alteraDefeated(char nomes[5][64], float percentualInativo[5], float percent
             strcat(nomes[i], " - Defeated");
         }
 
-        printf(" \n", nomes[i]);
+        printf("%s\n", nomes[i]);
     }
 
 } 
