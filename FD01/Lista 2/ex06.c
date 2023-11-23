@@ -66,4 +66,6 @@ int main () {
     printf("Maior nota: %.2f\n", maior);
     printf("Menor nota: %.2f\n", menor);
 
+    return 0;
+
 }
