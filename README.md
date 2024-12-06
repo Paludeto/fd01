@@ -1,2 +1,2 @@
 # fd01
-Fundamentos 1, UTFPR Apucarana
+Disciplina de Fundamentos de Programação 1, ministrada na UTFPR, câmpus Apucarana. 
